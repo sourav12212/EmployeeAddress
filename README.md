@@ -62,7 +62,194 @@ The EmployeeAddress application uses some dependencies
      - **Maven Dependencies**
          ```xml
            <dependency>
-			      <groupId>org.springframework.boot</groupId>
-			      <artifactId>spring-boot-starter-validation</artifactId>
-	      	</dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
      ```
+
+- **MySQL**
+    - **Description:** MySQL JDBC helps to connect MySQL database.
+     - **Maven Dependencies**
+         ```xml
+           <dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+     ```
+
+- **Swagger**
+    - **Description:**  Adds Swagger UI for documenting and testing your API endpoints.
+     - **Maven Dependencies**
+         ```xml
+           <dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+     ```
+
+## Data Flow
+In the Employee-Address Mapping Project, data flows through various components to handle employee and address operations. Here's an overview of the data flow:
+
+1. **Employee Entity**
+
+   - **Controller Layer**
+
+     The `EmployeeController` handles HTTP requests related to employees and routes them to the `EmployeeService`.
+    ```
+	@RestController
+           public class EmployeeController {
+
+            //some code
+          }
+    ```
+    - **Service Layer**
+  
+      The `EmployeeService` interact with the Repository to perform CRUD operations.
+      ```
+      	@Service
+        public class EmployeeService {
+        @Autowired
+        IEmployeeRepo employeeRepo;
+	   // Implemented some service layer code to interact with the Repository 
+      }
+
+      ```
+
+   - **Model Class**
+  
+      The `Employee` model class helps to declare how many entities are there in the Emplyee class.
+      ```
+      	@Data
+         @NoArgsConstructor
+        @AllArgsConstructor
+        @Entity
+          public class Employee {
+      		// to declare employee tables entity
+      }
+
+      ```
+      - **Repository Class**
+  
+      The `IEmployeeRepo` manages data access to the employee entity using Spring Data JPA.
+      ```
+      	@Repository
+           public interface IEmployeeRepo extends JpaRepository<Employee,Integer> {
+         }
+
+      ```
+
+1. **Address Entity**
+
+   - **Controller Layer**
+
+     The `AddressController` handles HTTP requests related to employees and routes them to the `AddressService`.
+    ```
+	@RestController
+          public class AddressController {
+    		// Implement some code
+    ```
+    - **Service Layer**
+  
+      The `AddressService` interact with the Repository to perform CRUD operations.
+      ```
+      	@Service
+          public class AddressService {
+      		
+
+      ```
+
+   - **Model Class**
+  
+      The `Address` model class helps to declare how many entities are there in the Address class.
+      ```
+      	@Data
+      	@NoArgsConstructor
+	 @AllArgsConstructor
+	 @Entity
+	 public class Address {
+
+      ```
+      - **Repository Class**
+  
+      The `IAddressRepo` manages data access to the address entity using Spring Data JPA.
+      ```
+      	@Repository
+	 public interface IAddressRepo extends JpaRepository<Address,Long> {
+	 }
+
+      ```
+
+## Data Structures
+
+The project utilizes the following data structures to represent employees and address data:
+
+#### Employee Class
+
+The `Employee` class defines the structure for employee data and includes fields such as `employeeId`, `firstName`, and `lastName` and a foreign key to the Address table.
+
+```
+	@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Employee {
+    
+    @Id
+    private Integer employeeId;
+    @NotBlank(message = "you must enter first name")
+    private String firstName;
+    private String lastName;
+    @OneToOne
+    @JoinColumn(name = "fk_addressId")
+    private Address address;
+}
+```
+
+#### Address Class
+
+The `Address` class defines the structure for employee data and includes fields such as `addressId`, `street`, `city`,`state` and `zip code` 
+
+```
+	@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Address {
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long addressId;
+    private String street;
+    private String city;
+    private String state;
+    private String zipcode;
+}
+```
+
+## Database Configuration
+
+The project is configured to connect to a MySQL database with the following properties:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/EmployeeAddress
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+
+
+spring.jpa.properties.hibernate.show_sql=true
+spring.jpa.properties.hibernate.use_sql_comments=true
+spring.jpa.properties.hibernate.format_sql=true
+```
+
+## Usage
+
+1. Start your Spring Boot application.
+2. Access the API endpoints to create, retrieve, update, and delete employee and addresses.
+
+## Contact
+
+For questions or feedback, please contact [Sourav Das](mailto:sourav12212@gmail.com).
